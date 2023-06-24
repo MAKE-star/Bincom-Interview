@@ -1,3 +1,8 @@
+window.onbeforeunload = function () {
+    window.scrollTo(0, 0);
+};
+
+
 let menuIcon = document.querySelector('#menu-icon');
 let navbar = document.querySelector('.navbar');
 
@@ -9,12 +14,42 @@ menuIcon.onclick = () => {
 let sections = document.querySelectorAll('section');
 let navlinks = document.querySelectorAll('header nav a');
 
-/*let image = document.getElementById('image');
-let images = ['techme.jpg','certificate.jpg','class2.jpg','maths_career.jpg','conference.jpg','flex.jpg']
-setInterval(function(){
-    let random = Math.floor(Math.random() *6);
-    image.src = images[random];
-}, 800); */
+const carouselSlide = document.querySelector('.carousel-slide');
+const carouselImages = Array.from(carouselSlide.querySelectorAll('img'));
+
+const slideWidth = carouselImages[0].clientWidth;
+
+let counter = 0;
+const intervalTime = 5000; // Interval time in milliseconds (5 seconds)
+let slideInterval;
+
+function shuffleImages() {
+  for (let i = carouselImages.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [carouselImages[i], carouselImages[j]] = [carouselImages[j], carouselImages[i]];
+  }
+}
+
+function startSlide() {
+  shuffleImages();
+  slideInterval = setInterval(() => {
+    counter++;
+    if (counter >= carouselImages.length) {
+      counter = 0;
+      shuffleImages();
+    }
+    carouselSlide.style.transform = `translateX(${-slideWidth * counter}px)`;
+  }, intervalTime);
+}
+
+function stopSlide() {
+  clearInterval(slideInterval);
+}
+
+carouselSlide.addEventListener('mouseenter', stopSlide);
+carouselSlide.addEventListener('mouseleave', startSlide);
+
+startSlide();
 
 window.onscroll = () => {
     sections.forEach(sec => {
@@ -40,7 +75,7 @@ window.onscroll = () => {
 };
 
 ScrollReveal({ 
-    reset: true,
+    /*reset: true,*/
     distance: '80px',
     duration: 2000,
     delay: 200
@@ -52,5 +87,13 @@ ScrollReveal({
 
 
  
- ScrollReveal().reveal('.home.content h1 , .about-img', {origin : 'left'});
+ ScrollReveal().reveal('.home.content h1 , .carousel-container', {origin : 'left'});
  ScrollReveal().reveal('.home.content p, , .about-content',{origin : 'right'});
+
+ const typed = new Typed('.multiple-text', {
+    strings: ['Frontend Developer','Blockchain Developer'],
+    typeSpeed: 100,
+    backSpeed: 100,
+    backDelay: 1000,
+    loop: true
+ });
